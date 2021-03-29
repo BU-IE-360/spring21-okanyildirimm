@@ -1,0 +1,49 @@
+---
+title: "Interesting Forecasting Applications with R"
+author: "Okan Yıldırım - IE360 - Spring 2021"
+date: "3/30/2021"
+output: html_document
+---
+```{r,echo=FALSE,results="hide",warning = FALSE}
+library(knitr)
+opts_chunk$set(tidy.opts=list(width.cutoff=60),tidy=TRUE)
+```
+
+```{r,echo=FALSE,eval=FALSE}
+rmarkdown::render("/home/baydogan/Courses/IE360/Guidelines/example_homework_0.Rmd",output_format="pdf_document")
+rmarkdown::render("/home/baydogan/Courses/IE360/Guidelines/example_homework_0.Rmd",output_format="html_document")
+```
+
+1. [Time series forecasting using ARIMA models](https://blogs.oracle.com/datascience/introduction-to-forecasting-with-arima-in-r)
+
+    This example is important because it introduces the forecasting methodology using ARIMA models in R. The steps are ...
+
+2. [Using R for Time Series Analysis](https://a-little-book-of-r-for-time-series.readthedocs.io/en/latest/src/timeseries.html)
+
+    This booklet itells you how to use the R statistical software to carry out some simple analyses that are common in analysing time series data.
+    
+3. [Time Series Forecasting in R](https://towardsdatascience.com/a-guide-to-forecasting-in-r-6b0c9638c261)
+
+    Here is what we will see in this article:
+    Naive methods
+    Exponential Smoothing (State-space models and DSHW)
+    BATS and TBATS
+    ARIMA/SARIMA models
+    How to set up a one-step-ahead forecast
+    
+4. [The Best Guide to Time Series Forecasting in R](https://www.simplilearn.com/tutorials/data-science-tutorial/time-series-forecasting-in-r)
+
+    Forecasting is a technique that is popularly used in the field of machine learning for making business predictions. Companies use past time series forecasts and make business decisions for the future. In this article, we will learn about Time Series Forecasting in detail. 
+    Following are the topics that will be discussed in this article:
+    What is Time Series Forecasting?
+    Time Series Forecasting Applications
+    Time Series Components
+    Time Series Methods
+    Time Series Forecasting Using The ARIMA Model
+    
+5. [A Complete Tutorial on Time Series Modeling in R](https://www.analyticsvidhya.com/blog/2015/12/complete-tutorial-time-series-modeling/)
+
+
+    Time series models are very useful models when you have serially correlated data. Most of business houses work on time series data to analyze sales number for the next year, website traffic, competition position and much more. However, it is also one of the areas, which many analysts do not understand. 
+    
+    So, if you aren’t sure about complete process of time series modeling, this guide would introduce you to various levels of time series modeling and its related techniques.
