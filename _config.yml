@@ -1,3 +1,4 @@
-theme: jekyll-theme-leap-day
+plugins:
+  - jekyll-include-cache
 title: IE360-STATISTICAL FORECASTING AND TIME SERIES
 description: Okan Yıldırım
