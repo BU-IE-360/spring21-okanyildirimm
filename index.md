@@ -12,6 +12,6 @@
 
  + [Homework 1 Description](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/IE360_Fall20_HW1.pdf) is here.  
 
- + [Homework 1 ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%200/Homework%200.html) is here. It is my analysis about 
+ + [Homework 1 ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/Homework-1.html) is here. It is my analysis about three time series data.
 
 
