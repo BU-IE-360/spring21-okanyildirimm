@@ -1,0 +1,339 @@
+---
+title: "Homework 1"
+author: "Okan Yıldırım"
+date: "`r format(Sys.time(), '%d %B %Y')`"
+output: 
+  html_document:
+      fig_width: 8
+      fig_height: 6
+      fig_caption: true
+      code_folding: hide
+      toc: true
+      toc_float: true
+      toc_depth: 4 
+      number_sections: true
+      theme: readable
+      highlight: tango 
+
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Introduction
+Central Bank of the Republic of Turkey provides several economy related measures on their Electronic Data Delivery System:  [EVDS](https://evds2.tcmb.gov.tr/). In this analysis, I take three time series data from [EVDS](https://evds2.tcmb.gov.tr/), analyze and visualize these series data and comment on the characteristics of these series data. 
+
+Moreover, I use [Google Trends](https://trends.google.com/trends/?geo=TR) which is a public web facility of Google Inc., based on Google Search that shows how often a particular search-term is entered relative to the total search-volume across various regions of the world, and in various languages, to check if search volume of certain keywords have some relation to my series data.
+
+# Package Installing 
+
+We need to install some data analyses packages before we start our analysis. If some of all of these packages are not installed, you can use  [install.packages()](https://www.rdocumentation.org/packages/utils/versions/3.6.2/topics/install.packages) function. 
+
+
+```{r warning=FALSE, message=FALSE}
+library(dplyr)
+library(tidyr)
+library(lubridate)
+library(readxl)
+library(ggplot2)
+library(plotly)
+library(RColorBrewer)
+library(zoo)
+library(data.table)
+```
+# Data Information
+
+I take three time series data from [EVDS](https://evds2.tcmb.gov.tr/) as excel files and two time series data for each from [EVDS](https://evds2.tcmb.gov.tr/) as csv files.
+
+```{r warning=FALSE, message=FALSE, echo=FALSE}
+tourist_arrivals<-read_excel("C:/Users/okan/Desktop/evds_data/german_tourists.xlsx")
+search_turkey<-fread("C:/Users/okan/Desktop/evds_data/search_almanya_turkey.csv",sep = ",")
+search_antalya<-fread("C:/Users/okan/Desktop/evds_data/search_almanya_antalya.csv",sep = ",")
+house_sales<-read_excel("C:/Users/okan/Desktop/evds_data/house_sales_first_hand.xlsx")
+search_house_for_sale<-fread("C:/Users/okan/Desktop/evds_data/search_satilik_ev.csv",sep = ",")
+search_housing_for_sale<-fread("C:/Users/okan/Desktop/evds_data/search_satilik_konut.csv",sep = ",")
+exchange_rate_of_dollar<-read_excel("C:/Users/okan/Desktop/evds_data/exchange_rate_of_usd.xlsx")
+search_usd<-fread("C:/Users/okan/Desktop/evds_data/search_usd.csv",sep = ",")
+search_dollar<-fread("C:/Users/okan/Desktop/evds_data/search_dolar.csv",sep = ",")
+```
+
+## First Time Series Data : Arrivals of German Tourists to Turkey
+
+Tourism in Turkey is focused largely on a variety of historical sites, and on seaside resorts along its Aegean and Mediterranean Sea coasts. At its height in 2019, Turkey attracted around 51 million foreign tourists, ranking as the sixth-most-popular tourist destination in the world.
+
+German tourists ranked first, with more than 10 million people coming to Turkey for tourism, while Iranians ranked second reaching 872,560 tourists. The third place was for the Saudis with 856,814 tourists. In this part, I focus on arrivals of German tourists between January 2016 and January 2021.
+
+
+
+```{r eval=FALSE}
+tourist_arrivals<-fread("Homeworks/Homework 1/german_tourists.xlsx")
+search_turkey<-fread("Homeworks/Homework 1/search_almanya_turkey.csv",sep = ",")
+search_antalya<-fread("Homeworks/Homework 1/search_almanya_antalya.csv",sep = ",")
+
+```
+
+![Olympos Ancient City, Antalya](C:/Users/okan/Desktop/evds_data/Olympos.jpg)
+
+## Second Time Series Data : First-hand House Sales
+
+Turkey recorded 81,222 house sales in February, slipping 31.6% from the same month last year, the country's statistical office revealed Monday. Nearly 24,737 newly built houses were sold while the rest were second-hand sales last month, TurkStat said in a statement.
+
+In this part, I focus on first-hand house sales in Turkey between February 2016 and February 2021.
+
+```{r eval=FALSE}
+house_sales<-fread("Homeworks/Homework 1/house_sales_first_hand.xlsx")
+search_house_for_sale<-fread("Homeworks/Homework 1/search_satilik_ev.csv",sep = ",")
+search_housing_for_sale<-fread("Homeworks/Homework 1/search_satilik_konut.csv",sep = ",")
+```
+
+![sahibinden.com-an online classifieds and shopping platform in which people and businesses buy and sell real estate, cars and a broad variety of goods and services.](C:/Users/okan/Desktop/evds_data/sahibinden.jpg)
+
+## Third Time Series Data : Exchange Rate of U.S. Dollar to Turkish Lira
+
+An exchange rate between two currencies is the rate at which one currency can be exchanged for another. That is, the exchange rate is the price of a country’s currency in terms of another currency. For example, if the exchange rate between the U.S. dollar (USD) and the Japanese yen (JPY) is 120 yen per dollar, one U.S. dollar can be exchanged for 120 yen in foreign currency markets. An exchange rate has two elements: a base currency and a counter currency. Given the relevance of the U.S. dollar as a reserve currency, most exchange rates use the USD as the base currency and the domestic currency as the counter currency. A few exceptions to this rule include the Euro and currencies of the Commonwealth (i.e. British Pound, Australian Dollar, New Zealand dollar), which use the domestic currency as base currency.
+
+In this part, I focus on exchange rate of U.S. Dollar to Turkish Lira between April 2016 and April 2021.
+
+```{r eval=FALSE}
+exchange_rate_of_dollar<-fread("Homeworks/Homework 1/exchange_rate_of_usd.xlsx")
+search_usd<-fread("Homeworks/Homework 1/search_usd.csv",sep = ",")
+search_inflation<-fread("Homeworks/Homework 1/search_dolar.csv",sep = ",")
+
+```
+
+![U.S. Dollar and Turkish Lira](C:/Users/okan/Desktop/evds_data/dolar-tl.jpg)
+
+
+# Data Preparation
+
+We start by converting our data into a data table for easier data analysis. We’ll first check for NA and duplicated values in our data. Since "Tarih" column is a character object, we need to change it's class. Moreover, we need to rename our columns to their translations in English and change the class of Date Object in order to sort. To get a summary of the data we’ll use generic summary() function. We need to rename our columns to their translations in English and change the class of Date Object in order to sort. To get a glimpse of our data we’ll glimpse() which is a function that comes with dplyr package.We repeat same process for the rest of series data.
+
+```{r warning=FALSE, message=FALSE,results="hide"}
+tourist_arrivals1 <- setDT(tourist_arrivals)
+sum(is.na(tourist_arrivals1))
+sum(duplicated(tourist_arrivals1))
+tourist_arrivals1 <-tourist_arrivals1%>%rename(Date=Tarih,Arrivals=`TP ODEMGZS ALMANYA`)%>%
+  mutate(Date=as.Date(as.yearmon(Date)))
+tourist_arrivals1 %>% glimpse()
+search_turkey1<-setDT(search_turkey)
+sum(is.na(search_turkey1))
+sum(duplicated(search_turkey1))
+search_turkey1 <-search_turkey1%>%rename(Date=Week,Turkey=`Turkey: (Germany)`)%>%
+  mutate(Date=mdy(Date))
+search_turkey1 %>% glimpse()
+search_antalya1<-setDT(search_antalya)
+sum(is.na(search_antalya1))
+sum(duplicated(search_antalya1))
+search_antalya1 <-search_antalya1%>%rename(Date=Week,Antalya=`Antalya: (Germany)`)%>%
+  mutate(Date=mdy(Date))
+search_antalya1 %>% glimpse()
+house_sales1 <- setDT(house_sales)
+sum(is.na(house_sales1))
+sum(duplicated(house_sales1))
+house_sales1 <-house_sales1%>%rename(Date=Tarih,Sales=`TP AKONUTSAT3 T40`)%>%
+  mutate(Date=as.Date(as.yearmon(Date)))
+summary(house_sales1)
+house_sales1 %>% glimpse()
+search_house_for_sale1<-setDT(search_house_for_sale)
+sum(is.na(search_house_for_sale1))
+sum(duplicated(search_house_for_sale1))
+search_house_for_sale1 <-search_house_for_sale1%>%rename(Date=Week,Houseforsale=`satÄ±lÄ±k ev: (Turkey)`)%>%
+  mutate(Date=mdy(Date))
+search_house_for_sale1 %>% glimpse()
+search_housing_for_sale1<-setDT(search_housing_for_sale)
+sum(is.na(search_housing_for_sale1))
+sum(duplicated(search_housing_for_sale1))
+search_housing_for_sale1 <-search_housing_for_sale1%>%rename(Date=Week,Housingforsale=`satÄ±lÄ±k konut: (Turkey)`)%>%
+  mutate(Date=mdy(Date))
+search_housing_for_sale1 %>% glimpse()
+exchange_rate_of_dollar1 <- setDT(exchange_rate_of_dollar)
+sum(is.na(exchange_rate_of_dollar1))
+sum(duplicated(exchange_rate_of_dollar1))
+exchange_rate_of_dollar1 <-exchange_rate_of_dollar1%>%rename(Date=Tarih,Exchangerate=`TP DK USD A YTL`)%>%
+  mutate(Date=as.Date(as.yearmon(Date)))
+summary(exchange_rate_of_dollar1)
+exchange_rate_of_dollar1 %>% glimpse()
+search_dollar1<-setDT(search_dollar)
+sum(is.na(search_dollar1))
+sum(duplicated(search_dollar1))
+search_dollar1 <-search_dollar1%>%rename(Date=Week,Dollar=`dolar: (Turkey)`)%>%
+  mutate(Date=mdy(Date))
+search_dollar1 %>% glimpse()
+search_usd1<-setDT(search_usd)
+sum(is.na(search_usd1))
+sum(duplicated(search_usd1))
+search_usd1 <-search_usd1%>%rename(Date=Week,USD=`United States Dollar: (Turkey)`)%>%
+  mutate(Date=mdy(Date))
+search_usd1 %>% glimpse()
+```
+
+# Data Visualization
+
+## Data Visualization of First Time Series Data : Arrivals of German Tourists to Turkey
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(
+ggplot(data=tourist_arrivals1, aes(x=Date, y=Arrivals, group=1)) +
+  geom_smooth(method="loess",color="red",lwd=.5)+
+  geom_line(color="blue")+
+  labs(
+    title = "Arrivals of German Tourists to Turkey between Jan 2016 and Jan 2021",
+    x = "Date",
+    y = "Arrivals"
+  ))
+```
+
+We can say that there is an increasing trend between 2016 and 2020. There is an increase that started especially in June and July and peaked in August. As winter approaches, the decline begins and hits the lowest levels in February.
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_turkey1, aes(x=Date, y=Turkey, group=1)) +
+  geom_line(color="blue")+
+    geom_smooth(method="loess",se=F,color="red",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Turkey' in Germany between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'Turkey'" 
+  ))
+```
+
+The keywords under the influence of political crisis between Turkey and Germany, we can see that makes peak. Apart from that, we observe a downtrend.
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_antalya1, aes(x=Date, y=Antalya, group=1)) +
+  geom_line(color="red")+
+    geom_smooth(method="loess",se=F,color="blue",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Antalya' in Germany between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'Antalya'" 
+  ))
+```
+
+We observe periodic increases in July and August. Especially towards the winter months, a decrease is observed and it reaches the minimum in December.
+
+## Data Visualization of Second Time Series Data : First-hand House Sales
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(house_sales1,aes(x=Date,y=Sales))+geom_step(color="orange")+
+  geom_point()+
+    geom_smooth(method="loess")+
+  labs(
+    title = "House Sales in Turkey between February 2016 and February 2021",
+    x = "Date",
+    y = "Sales"
+  ))
+```
+
+There is an increasing trend between 2016 and 2018 but there is a sharper decreasing trend after 2018. It is obvious that sales are falling at the beginning of each year, in June and in July. A noticeable increase in home sales begins in August each year and peaks in December.
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_house_for_sale1, aes(x=Date, y=Houseforsale, group=1)) +
+  geom_line(color="blue")+
+    geom_smooth(method="loess",se=F,color="red",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Satılık Ev'(House for Sale) in Turkey between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'Satılık Ev'(House for Sale)" 
+  ))
+```
+
+Low housing loan interest rates, which started at the end of April 2020 and continued in May, have significantly increased the search volume of the keyword.
+
+```{r warning=FALSE, message=FALSE}
+
+search_house_for_sale3 <- fread("search_house_for_sale2.csv",sep = ",") 
+search_house_for_sale3 <-search_house_for_sale3%>%
+  mutate(Date=mdy(Date))
+ggplotly(ggplot(data=search_house_for_sale3, aes(x=Date, y=Houseforsale, group=1)) +
+  geom_line(color="blue")+
+    geom_smooth(method="loess",se=F,color="red",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Satılık Ev'(House for Sale) in Turkey between April 2016 and February 2021",
+    x = "Date",
+    y = "Search Volume of 'Satılık Ev'(House for Sale)" 
+  ))
+
+```
+
+In order to eliminate the effect of the pandemic, I determined the period after March as an outlier. Although there are decreases in general, it seems to be an increasing trend. Apart from this, we can say that there is a significant increase in February and July.
+ 
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_housing_for_sale1, aes(x=Date, y=Housingforsale, group=1)) +
+  geom_line(color="red")+
+    geom_smooth(method="loess",se=F,color="blue",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Satılık Konut'(Housing for Sale) in Turkey between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'Satılık Konut'(Housing for Sale)" 
+  ))
+```
+
+We can see that there is an increasing trend in 2016 and 2020, although not much.There is an increase in February, May and August. With the low-interest mortgage loan applied at the beginning of 2017, we see a peak in February.
+
+## Data Visualization of Third Time Series Data : Exchange Rate of U.S. Dollar to Turkish Lira
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(exchange_rate_of_dollar1,aes(x=Date,y=Exchangerate))+
+  geom_line(color="orange")+
+  geom_smooth(method="loess",se=F,color="blue",lwd=.5)+
+    labs(
+    title = "Exchange Rate of U.S. Dollar to Turkish Lira between April 2016 and April 2021",
+    x = "Date",
+    y = "Sales"
+  ))
+```
+
+We can see that there is definitely an upward trend. There are big increases especially between August and November. A sharp increase is observed in August 2018 as there are political problems with the United States. It can also be observed in this graph that the Central Bank's decision not to increase the interest rate in October 2020 had a great effect on the exchange rate.
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_dollar1, aes(x=Date, y=Dollar, group=1)) +
+  geom_line(color="blue")+
+    geom_smooth(method="loess",se=F,color="red",lwd=.5)+
+  labs(
+    title = "Search Volume of 'Dolar'(Dollar) in Turkey between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'Dolar'(Dollar) in Turkey" 
+  ))
+```
+
+We can see that there is an increasing trend. We observe the impact of the political crisis with America in August 2018 in this graph. It can also be observed in this graph that the Central Bank's decision not to increase the interest rate in October 2020 had a great effect on the exchange rate.
+
+```{r warning=FALSE, message=FALSE}
+ggplotly(ggplot(data=search_usd1, aes(x=Date, y=USD, group=1)) +
+  geom_line(color="red")+
+    geom_smooth(method="loess",se=F,color="blue",lwd=.5)+
+  labs(
+    title = "Search Volume of 'U.S. Dollar' in Turkey between April 2016 and April 2021",
+    x = "Date",
+    y = "Search Volume of 'U.S. Dollar' in Turkey" 
+  ))
+```
+
+We can say that there is an increasing trend for this keyword. The impact of the political crisis with America on the Turkish lira can also be observed here. It can also be observed in this graph that the Central Bank's decision not to increase the interest rate in October 2020 had a great effect on the exchange rate.
+
+
+# Reference
+
+## Data
+
+[EVDS](https://evds2.tcmb.gov.tr/)
+
+[Google Trends](https://trends.google.com/trends/?geo=TR)
+
+## Others
+
+https://en.wikipedia.org/wiki/Tourism_in_Turkey
+
+https://www.imtilak.net/en/news/turkey-tourists-number#
+
+https://www.aa.com.tr/en/economy/turkey-records-over-81-200-house-sales-in-february/2176057
+
+https://www.focus-economics.com/economic-indicator/exchange-rate
+
+https://www.tokihaber.com.tr/haberler/konut-kredisi-faizleri-mayista-dustu/
+
+https://www.evrensel.net/haber/359165/mudahaleler-yetmedi-dolar-6-88e-yukseldi-13-agustos-2018
+
+https://www.sozcu.com.tr/2020/ekonomi/4-maddede-dolar-neden-yukseliyor-2-6098079/
+
+https://www.dw.com/tr/türkiye-ile-almanya-arasında-incirlik-krizi/a-19349465
