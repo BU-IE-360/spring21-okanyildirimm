@@ -16,6 +16,6 @@
 
  + [Homework 1 ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/Homework-1.html) is here. It is my analysis about three time series data.
 
- + You can access code from [Homework 1 RMD File](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/Homework-1.Rmd) .
+ + You can access code from [Homework 1 RMD File](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/Homework%201.Rmd) .
 
 
