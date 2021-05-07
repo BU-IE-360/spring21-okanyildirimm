@@ -20,4 +20,4 @@
 
 ### Homework 2
  
- + [Homework 1 Description](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%202/IE360_Spring21_HW2.pdf) is here.  
+ + [Homework 2 Description](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%202/IE360_Spring21_HW2.pdf) is here.  
