@@ -18,4 +18,6 @@
 
  + You can access code from [Homework 1 RMD File](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%201/Homework%201.Rmd) .
 
-
+### Homework 2
+ 
+ + [Homework 2 Description](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%202/IE360_Spring21_HW2.pdf) is here.  
