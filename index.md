@@ -24,8 +24,10 @@
 
 ### Homework 4 - 5
 
-+ [Homework 4 - 5 ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%204-5/HW45GROUP14 (1).html) is here.
++ [Homework 4 - 5 ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%204-5/HW45GROUP14%20(1).html) is here.
++ You can access code from [Homework 4-5 RMD File](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Homework%204-5/HW4-5%20GROUP14%20(1).Rmd) .
 
 ### Project Report
 
-+ [Project Report ](https://bu-ie-360.github.io/spring21-okanyildirimm/Homeworks/Project%20-%20Group%2014/Project-Report-Group14.html) is here.
++ [Project Report ](https://bu-ie-360.github.io/spring21-okanyildirimm/Project%20-%20Group%2014/Project-Report-Group14.html) is here.
++ You can access code from [Project Report RMD File](https://bu-ie-360.github.io/spring21-okanyildirimm/Project%20-%20Group%2014/Project%20Report%20Group14.Rmd) .
